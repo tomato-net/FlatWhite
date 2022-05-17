@@ -11,22 +11,28 @@ namespace FlatWhite.Objects
 {
     internal class GameObject
     {
-        public Vector2 position;
-        public float velocity;
         IInputComponent _input;
+        IPhysicsComponent _physics;
         IGraphicsComponent _graphics;
 
-        public GameObject(IInputComponent input, IGraphicsComponent graphics)
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
+        public float Speed { get; private set; }
+
+        public GameObject(IInputComponent input, IPhysicsComponent physics, IGraphicsComponent graphics)
         {
             _input = input;
+            _physics = physics;
             _graphics = graphics;
-            position = new Vector2(100f, 100f);
-            velocity = 200f;
+            Position = new Vector2(100f, 100f);
+            Velocity = new Vector2();
+            Speed = 200f;
         }
 
         public void Update(GameTime gameTime)
         {
             _input.Update(this, gameTime);
+            _physics.Update(this, gameTime);
             _graphics.Update(this, gameTime);
         }
 

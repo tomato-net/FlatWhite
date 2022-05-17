@@ -5,7 +5,7 @@ using FlatWhite.Objects;
 
 namespace FlatWhite
 {
-    public class Game1 : Game
+    public class FlatWhite : Game
     {
         public static readonly string version = "0.0.1";
 
@@ -16,7 +16,7 @@ namespace FlatWhite
         private GameObject ball;
         private GameObject ball2;
 
-        public Game1()
+        public FlatWhite()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -42,10 +42,12 @@ namespace FlatWhite
 
             ball = new GameObject(
                 new PlayerInputComponent(),
-                new BallGraphicsComponent(ballTexture));
+                new CollidingPhysicsComponent(),
+                new BallGraphicsComponent(ballTexture));;
 
             ball2 = new GameObject(
                 new DemoPlayerInputComponent(),
+                new CollidingPhysicsComponent(),
                 new BallGraphicsComponent(ballTexture));
         }
 

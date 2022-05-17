@@ -13,18 +13,22 @@ namespace FlatWhite.Objects
     {
         public void Update(GameObject gameObject, GameTime gameTime)
         {
+            Vector2 velocity = new Vector2();
+
             var kstate = Keyboard.GetState();
             if (kstate.IsKeyDown(Keys.Up))
-                gameObject.position.Y -= gameObject.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                velocity.Y -= gameObject.Speed;
 
             if (kstate.IsKeyDown(Keys.Down))
-                gameObject.position.Y += gameObject.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                velocity.Y += gameObject.Speed;
 
             if (kstate.IsKeyDown(Keys.Left))
-                gameObject.position.X -= gameObject.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                velocity.X -= gameObject.Speed;
 
             if (kstate.IsKeyDown(Keys.Right))
-                gameObject.position.X += gameObject.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                velocity.X += gameObject.Speed;
+
+            gameObject.Velocity = velocity;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace FlatWhite.Objects
         {
             spriteBatch.Draw(
                 _sprite,
-                gameObject.position,
+                gameObject.Position,
                 null,
                 Color.White,
                 0f,
