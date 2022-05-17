@@ -1,17 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using FlatWhite.Objects;
 
 namespace FlatWhite
 {
     public class Game1 : Game
     {
-        Texture2D ballTexture;
-        Vector2 ballPosition;
-        float ballSpeed;
+        public static readonly string version = "0.0.1";
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private Texture2D ballTexture;
+        private GameObject ball;
+        private GameObject ball2;
 
         public Game1()
         {
@@ -22,9 +25,11 @@ namespace FlatWhite
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
-            ballSpeed = 100f;
+            _graphics.PreferredBackBufferWidth = 2560;
+            _graphics.PreferredBackBufferHeight = 1440;
+            _graphics.ToggleFullScreen();
+            _graphics.HardwareModeSwitch = false;
+            _graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -35,7 +40,13 @@ namespace FlatWhite
 
             ballTexture = Content.Load<Texture2D>("ball");
 
-            // TODO: use this.Content to load your game content here
+            ball = new GameObject(
+                new PlayerInputComponent(),
+                new BallGraphicsComponent(ballTexture));
+
+            ball2 = new GameObject(
+                new DemoPlayerInputComponent(),
+                new BallGraphicsComponent(ballTexture));
         }
 
         protected override void Update(GameTime gameTime)
@@ -43,25 +54,8 @@ namespace FlatWhite
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var kstate = Keyboard.GetState();
-            if (kstate.IsKeyDown(Keys.Up))
-                ballPosition.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (kstate.IsKeyDown(Keys.Down))
-                ballPosition.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (kstate.IsKeyDown(Keys.Left))
-                ballPosition.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (kstate.IsKeyDown(Keys.Right))
-                ballPosition.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            ballPosition.X = MathHelper.Min(ballPosition.X, _graphics.PreferredBackBufferWidth);
-            ballPosition.X = MathHelper.Max(ballPosition.X, 0f);
-            ballPosition.Y = MathHelper.Min(ballPosition.Y, _graphics.PreferredBackBufferHeight);
-            ballPosition.Y = MathHelper.Max(ballPosition.Y, 0f);
-
-            // TODO: Add your update logic here
+            ball.Update(gameTime);
+            ball2.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -72,20 +66,10 @@ namespace FlatWhite
 
             _spriteBatch.Begin();
 
-            _spriteBatch.Draw(
-                ballTexture,
-                ballPosition,
-                null,
-                Color.White,
-                0f, 
-                new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), 
-                Vector2.One,
-                SpriteEffects.None, 
-                0f
-             );
+            ball.Draw(_spriteBatch);
+            ball2.Draw(_spriteBatch);
 
             _spriteBatch.End();
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
