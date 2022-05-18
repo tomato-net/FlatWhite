@@ -9,6 +9,6 @@ namespace FlatWhite.Commands
 {
     internal interface ICommand
     {
-        public void Execute(GameObject gameObject);
+        public void Execute();
     }
 }

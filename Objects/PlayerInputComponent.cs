@@ -19,6 +19,7 @@ namespace FlatWhite.Objects
 
             List<Inputs> inputs = InputHandler.GetInputs();
 
+            // If Inputs.AnalogueMove then use that instead, Vector2, build Vector2 from digital inputs & create MoveCommand with direction
             if (inputs.Contains(Inputs.MoveUp))
                 velocity.Y -= gameObject.Speed;
 
