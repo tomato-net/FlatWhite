@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
+using FlatWhite.Input;
+
 namespace FlatWhite.Objects
 {
     internal class PlayerInputComponent : IInputComponent
@@ -15,17 +17,18 @@ namespace FlatWhite.Objects
         {
             Vector2 velocity = new Vector2();
 
-            var kstate = Keyboard.GetState();
-            if (kstate.IsKeyDown(Keys.Up))
+            List<Inputs> inputs = InputHandler.GetInputs();
+
+            if (inputs.Contains(Inputs.MoveUp))
                 velocity.Y -= gameObject.Speed;
 
-            if (kstate.IsKeyDown(Keys.Down))
+            if (inputs.Contains(Inputs.MoveDown))
                 velocity.Y += gameObject.Speed;
 
-            if (kstate.IsKeyDown(Keys.Left))
+            if (inputs.Contains(Inputs.MoveLeft))
                 velocity.X -= gameObject.Speed;
 
-            if (kstate.IsKeyDown(Keys.Right))
+            if (inputs.Contains(Inputs.MoveRight))
                 velocity.X += gameObject.Speed;
 
             gameObject.Velocity = velocity;
