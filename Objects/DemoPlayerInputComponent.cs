@@ -13,7 +13,6 @@ namespace FlatWhite.Objects
     {
         public void Update(GameObject gameObject, GameTime gameTime)
         {
-            gameObject.Velocity = new Vector2(gameObject.Speed);
         }
     }
 } 
