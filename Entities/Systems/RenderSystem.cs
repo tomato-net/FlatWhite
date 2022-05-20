@@ -1,4 +1,5 @@
-﻿using FlatWhite.Entities.Components;
+﻿using FlatWhite.Core;
+using FlatWhite.Entities.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -9,23 +10,41 @@ using System.Threading.Tasks;
 
 namespace FlatWhite.Entities.Systems
 {
-    internal class RenderSystem : IDrawSystem
+    internal class RenderSystem : IDrawSystem, IUpdateSystem
     {
         private readonly GraphicsDevice _graphicsDevice;
         private readonly SpriteBatch _spriteBatch;
         private EntityManager _entityManager;
         private ComponentMapper<Position> _positionMapper;
         private ComponentMapper<Components.Texture> _textureMapper;
+        private Camera _camera;
 
-        public RenderSystem(GraphicsDevice graphicsDevice)
+        public RenderSystem(GraphicsDevice graphicsDevice, Camera camera)
         {
             _graphicsDevice = graphicsDevice;
             _spriteBatch = new SpriteBatch(graphicsDevice);
+            _camera = camera;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            foreach (Entity entity in _entityManager.Entities.Values)
+            {
+                if (!_positionMapper.Has(entity.Id))
+                    continue;
+
+                if (!_textureMapper.Has(entity.Id))
+                    continue;
+
+                Position pos = _positionMapper.Get(entity.Id);
+                _camera.MoveTo(pos.Vector);
+                break;
+            }
         }
 
         public void Draw()
         {
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(transformMatrix: _camera.Transform);
 
             foreach (Entity entity in _entityManager.Entities.Values)
             {
