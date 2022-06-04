@@ -16,16 +16,20 @@ namespace FlatWhite.Entities
             _componentMapperService = componentMapperService;
         }
 
-        public void Attach<T>(T component)
+        public Entity Attach<T>(T component)
             where T : class
         {
             _componentMapperService.GetMapper<T>().Add(Id, component);
+
+            return this;
         }
 
-        public void Detach<T>()
+        public Entity Detach<T>()
             where T : class
         {
             _componentMapperService.GetMapper<T>().Delete(Id);
+
+            return this;
         }
 
         public void Has<T>()

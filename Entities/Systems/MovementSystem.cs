@@ -8,23 +8,19 @@ using System.Threading.Tasks;
 
 namespace FlatWhite.Entities.Systems
 {
-    internal class MovementSystem: IUpdateSystem
+    internal class MovementSystem: EntitySystem, IUpdateSystem
     {
-        private EntityManager _entityManager;
-        private ComponentMapper<Position> _positionMapper;
+        private ComponentMapper<Transform2> _positionMapper;
         private ComponentMapper<Physics> _physicsMapper;
+
+        public MovementSystem(): base(Aspect.All(typeof(Transform2), typeof(Transform2))) { }
+
         public void Update(GameTime gameTime)
         {
-            foreach (Entity entity in _entityManager.Entities.Values)
+            foreach (var entityId in ActiveEntities)
             {
-                if (!_positionMapper.Has(entity.Id))
-                    continue;
-
-                if (!_physicsMapper.Has(entity.Id))
-                    continue;
-
-                Position pos = _positionMapper.Get(entity.Id);
-                Physics physics = _physicsMapper.Get(entity.Id);
+                Transform2 pos = _positionMapper.Get(entityId);
+                Physics physics = _physicsMapper.Get(entityId);
 
                 Vector2 transform = new Vector2(physics.Speed);
                 Vector2 position = pos.Vector + transform * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -32,11 +28,10 @@ namespace FlatWhite.Entities.Systems
             }
         }
 
-        public void Initialize(EntityManager entityManager, IComponentMapperService componentMapperService)
+        public override void Initialize(IComponentMapperService mapperService)
         {
-            _entityManager = entityManager;
-            _positionMapper = componentMapperService.GetMapper<Position>();
-            _physicsMapper = componentMapperService.GetMapper<Physics>();
+            _positionMapper = mapperService.GetMapper<Transform2>();
+            _physicsMapper = mapperService.GetMapper<Physics>();
         }
     }
 }

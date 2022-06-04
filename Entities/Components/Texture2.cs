@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace FlatWhite.Entities.Components
 {
-    internal class Position
+    internal class Texture2
     {
-        public Vector2 Vector { get; set; }
+        public Texture2D Texture { get; set; }
     }
 }

@@ -10,16 +10,15 @@ using System.Threading.Tasks;
 
 namespace FlatWhite.Entities.Systems
 {
-    internal class RenderSystem : IDrawSystem, IUpdateSystem
+    internal class RenderSystem : EntitySystem, IDrawSystem, IUpdateSystem
     {
         private readonly GraphicsDevice _graphicsDevice;
         private readonly SpriteBatch _spriteBatch;
-        private EntityManager _entityManager;
-        private ComponentMapper<Position> _positionMapper;
-        private ComponentMapper<Components.Texture> _textureMapper;
+        private ComponentMapper<Transform2> _positionMapper;
+        private ComponentMapper<Components.Texture2> _textureMapper;
         private Camera _camera;
 
-        public RenderSystem(GraphicsDevice graphicsDevice, Camera camera)
+        public RenderSystem(GraphicsDevice graphicsDevice, Camera camera): base(Aspect.All(typeof(Transform2), typeof(Texture2)))
         {
             _graphicsDevice = graphicsDevice;
             _spriteBatch = new SpriteBatch(graphicsDevice);
@@ -28,15 +27,9 @@ namespace FlatWhite.Entities.Systems
 
         public void Update(GameTime gameTime)
         {
-            foreach (Entity entity in _entityManager.Entities.Values)
+            foreach (var entityId in ActiveEntities)
             {
-                if (!_positionMapper.Has(entity.Id))
-                    continue;
-
-                if (!_textureMapper.Has(entity.Id))
-                    continue;
-
-                Position pos = _positionMapper.Get(entity.Id);
+                Transform2 pos = _positionMapper.Get(entityId);
                 _camera.MoveTo(pos.Vector);
                 break;
             }
@@ -46,24 +39,18 @@ namespace FlatWhite.Entities.Systems
         {
             _spriteBatch.Begin(transformMatrix: _camera.Transform);
 
-            foreach (Entity entity in _entityManager.Entities.Values)
+            foreach (var entityId in ActiveEntities)
             {
-                if (!_positionMapper.Has(entity.Id))
-                    continue;
-
-                if (!_textureMapper.Has(entity.Id))
-                    continue;
-
-                Position pos = _positionMapper.Get(entity.Id);
-                Components.Texture texture = _textureMapper.Get(entity.Id);
+                Transform2 pos = _positionMapper.Get(entityId);
+                Components.Texture2 texture = _textureMapper.Get(entityId);
 
                 _spriteBatch.Draw(
-                    texture.Texture2,
+                    texture.Texture,
                     pos.Vector,
                     null,
                     Color.White,
                     0f,
-                    new Vector2(texture.Texture2.Width / 2, texture.Texture2.Height / 2),
+                    new Vector2(texture.Texture.Width / 2, texture.Texture.Height / 2),
                     Vector2.One,
                     SpriteEffects.None,
                     0f
@@ -73,11 +60,10 @@ namespace FlatWhite.Entities.Systems
             _spriteBatch.End();
         }
 
-        public void Initialize(EntityManager entityManager, IComponentMapperService componentMapperService)
+        public override void Initialize(IComponentMapperService componentMapperService)
         {
-            _entityManager = entityManager;
-            _positionMapper = componentMapperService.GetMapper<Position>();
-            _textureMapper = componentMapperService.GetMapper<Components.Texture>();
+            _positionMapper = componentMapperService.GetMapper<Transform2>();
+            _textureMapper = componentMapperService.GetMapper<Components.Texture2>();
         }
     }
 }

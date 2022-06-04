@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,12 +30,12 @@ namespace FlatWhite.Entities
         public ComponentMapper<T> GetMapper<T>()
             where T : class
         {
-            int mapperId = GetMapperId<T>();
+            int componentTypeId = GetComponentTypeId(typeof(T));
 
-            if (_componentMappers.ContainsKey(mapperId))
-                return _componentMappers[mapperId] as ComponentMapper<T>;
+            if (_componentMappers.ContainsKey(componentTypeId) && _componentMappers[componentTypeId] != null)
+                return _componentMappers[componentTypeId] as ComponentMapper<T>;
 
-            return CreateMapperForType<T>(_componentTypes.Count);
+            return CreateMapperForType<T>(componentTypeId);
         }
 
         private int GetMapperId<T>()
@@ -43,6 +44,30 @@ namespace FlatWhite.Entities
                 return id;
 
             return -1;
+        }
+
+        public int GetComponentTypeId(Type type)
+        {
+            if (_componentTypes.TryGetValue(type, out int id))
+                return id;
+
+            id = _componentTypes.Count;
+            _componentTypes.Add(type, id);
+            return id;
+        }
+
+        public BitVector32 CreateComponentBits(int entityId)
+        {
+            BitVector32 componentBits = new BitVector32();
+            int mask = BitVector32.CreateMask();
+
+            for (var componentId = 0; componentId < _componentMappers.Count; componentId++)
+            {
+                componentBits[mask] = _componentMappers[componentId]?.Has(entityId) ?? false;
+                mask = BitVector32.CreateMask(mask);
+            }
+
+            return componentBits;
         }
     }
 }

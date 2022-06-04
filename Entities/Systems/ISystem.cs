@@ -8,6 +8,6 @@ namespace FlatWhite.Entities.Systems
 {
     internal interface ISystem
     {
-        public void Initialize(EntityManager entityManager, IComponentMapperService componentManager);
+        public void Initialize(EntityManager entityManager, ComponentManager componentManager);
     }
 }

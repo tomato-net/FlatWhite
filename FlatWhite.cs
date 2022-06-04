@@ -40,6 +40,7 @@ namespace FlatWhite
             _componentManager = new ComponentManager();
             _entityManager = new EntityManager(_componentManager);
             _systemManager = new SystemManager(_entityManager, _componentManager);
+            _systemManager.AddSystem(_entityManager);
             _systemManager.AddSystem(new MovementSystem());
             _systemManager.AddSystem(new RenderSystem(GraphicsDevice, _camera));
 
@@ -51,15 +52,15 @@ namespace FlatWhite
 
             ballTexture = Content.Load<Texture2D>("ball");
 
-            Entity ball = _entityManager.CreateEntity();
-            ball.Attach(new Entities.Components.Position() { Vector = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2)});
-            ball.Attach(new Entities.Components.Physics() { Speed = 100f });
-            ball.Attach(new Entities.Components.Texture() { Texture2 = ballTexture });
+            Entity ball = _entityManager.CreateEntity()
+                .Attach(new Entities.Components.Transform2() { Vector = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2)})
+                .Attach(new Entities.Components.Physics() { Speed = 100f })
+                .Attach(new Entities.Components.Texture2() { Texture = ballTexture });
 
-            Entity ball2 = _entityManager.CreateEntity();
-            ball2.Attach(new Entities.Components.Position() { Vector = new Vector2(_graphics.PreferredBackBufferWidth / 3, _graphics.PreferredBackBufferHeight / 3)});
-            ball2.Attach(new Entities.Components.Physics() { Speed = 90f });
-            ball2.Attach(new Entities.Components.Texture() { Texture2 = ballTexture });
+            Entity ball2 = _entityManager.CreateEntity()
+                .Attach(new Entities.Components.Transform2() { Vector = new Vector2(_graphics.PreferredBackBufferWidth / 3, _graphics.PreferredBackBufferHeight / 3)})
+                .Attach(new Entities.Components.Physics() { Speed = 90f })
+                .Attach(new Entities.Components.Texture2() { Texture = ballTexture });
         }
 
         protected override void Update(GameTime gameTime)
