@@ -13,7 +13,7 @@ namespace FlatWhite.Entities.Systems
         private ComponentMapper<Transform2> _positionMapper;
         private ComponentMapper<Physics> _physicsMapper;
 
-        public MovementSystem(): base(Aspect.All(typeof(Transform2), typeof(Transform2))) { }
+        public MovementSystem(): base(Aspect.All(typeof(Transform2), typeof(Physics))) { }
 
         public void Update(GameTime gameTime)
         {

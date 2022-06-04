@@ -15,7 +15,7 @@ namespace FlatWhite.Entities.Systems
         private readonly GraphicsDevice _graphicsDevice;
         private readonly SpriteBatch _spriteBatch;
         private ComponentMapper<Transform2> _positionMapper;
-        private ComponentMapper<Components.Texture2> _textureMapper;
+        private ComponentMapper<Texture2> _textureMapper;
         private Camera _camera;
 
         public RenderSystem(GraphicsDevice graphicsDevice, Camera camera): base(Aspect.All(typeof(Transform2), typeof(Texture2)))
@@ -63,7 +63,7 @@ namespace FlatWhite.Entities.Systems
         public override void Initialize(IComponentMapperService componentMapperService)
         {
             _positionMapper = componentMapperService.GetMapper<Transform2>();
-            _textureMapper = componentMapperService.GetMapper<Components.Texture2>();
+            _textureMapper = componentMapperService.GetMapper<Texture2>();
         }
     }
 }

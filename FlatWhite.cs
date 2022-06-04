@@ -5,6 +5,7 @@ using FlatWhite.Objects;
 using FlatWhite.Core;
 using FlatWhite.Entities;
 using FlatWhite.Entities.Systems;
+using FlatWhite.Entities.Components;
 
 namespace FlatWhite
 {
@@ -30,13 +31,13 @@ namespace FlatWhite
 
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = 2560;
-            _graphics.PreferredBackBufferHeight = 1440;
-            _graphics.ToggleFullScreen();
-            _graphics.HardwareModeSwitch = false;
-            _graphics.ApplyChanges();
+            // _graphics.PreferredBackBufferWidth = 2560;
+            // _graphics.PreferredBackBufferHeight = 1440;
+            // _graphics.ToggleFullScreen();
+            // _graphics.HardwareModeSwitch = false;
+            // _graphics.ApplyChanges();
 
-            _camera = new Camera();
+            _camera = new Camera(_graphics.GraphicsDevice);
             _componentManager = new ComponentManager();
             _entityManager = new EntityManager(_componentManager);
             _systemManager = new SystemManager(_entityManager, _componentManager);
@@ -53,14 +54,14 @@ namespace FlatWhite
             ballTexture = Content.Load<Texture2D>("ball");
 
             Entity ball = _entityManager.CreateEntity()
-                .Attach(new Entities.Components.Transform2() { Vector = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2)})
-                .Attach(new Entities.Components.Physics() { Speed = 100f })
-                .Attach(new Entities.Components.Texture2() { Texture = ballTexture });
+                .Attach(new Transform2() { Vector = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2)})
+                .Attach(new Physics() { Speed = 100f })
+                .Attach(new Texture2() { Texture = ballTexture });
 
             Entity ball2 = _entityManager.CreateEntity()
-                .Attach(new Entities.Components.Transform2() { Vector = new Vector2(_graphics.PreferredBackBufferWidth / 3, _graphics.PreferredBackBufferHeight / 3)})
-                .Attach(new Entities.Components.Physics() { Speed = 90f })
-                .Attach(new Entities.Components.Texture2() { Texture = ballTexture });
+                .Attach(new Transform2() { Vector = new Vector2(_graphics.PreferredBackBufferWidth / 3, _graphics.PreferredBackBufferHeight / 3)})
+                .Attach(new Physics() { Speed = 90f })
+                .Attach(new Texture2() { Texture = ballTexture });
         }
 
         protected override void Update(GameTime gameTime)
